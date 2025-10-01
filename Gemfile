@@ -57,3 +57,8 @@ group :development do
   gem "letter_opener"
 
 end
+
+# 生产环境使用 PostgreSQL
+group :production do
+  gem "pg", "~> 1.1"
+end

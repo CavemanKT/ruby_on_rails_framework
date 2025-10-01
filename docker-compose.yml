@@ -1,0 +1,53 @@
+# docker-compose.yml
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: teddy1_production
+      POSTGRES_USER: teddy1
+      POSTGRES_PASSWORD: asdflkjqwerpoiu
+      # 移除有问题的初始化参数
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # 暂时注释掉初始化脚本，先让容器正常启动
+      # - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teddy1 -d teddy1_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  web:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      DB_NAME: teddy1_production
+      DB_USERNAME: teddy1
+      DB_PASSWORD: asdflkjqwerpoiu
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/rails
+      - storage:/rails/storage
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  storage:
+
+networks:
+  app-network:
+    driver: bridge
