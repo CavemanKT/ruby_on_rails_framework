@@ -2,10 +2,12 @@ Rails.application.routes.draw do
   # Public routes
   get "home/index"
   resource :session
+  resource :registration, only: [:new, :create]  # 添加这行
   resources :passwords, param: :token
   
   # Admin namespace
   namespace :admin do
+    # ... 现有管理员路由
     root to: "dashboard#index"
     
     resources :reports, only: [:index, :show] do
