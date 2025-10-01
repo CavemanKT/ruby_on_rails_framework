@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* Flowbite 配置 */
+@source "../../javascript";
+@source "../../views";
+@source "../../../vendor/javascript";
+
+/* 深色模式配置 */
+@variant dark (&:where(.dark, .dark *));
