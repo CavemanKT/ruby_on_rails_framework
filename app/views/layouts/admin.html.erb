@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Admin Panel" %> - Teddy Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    
+    <%# Tailwind CSS %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <!-- 深色模式初始化 -->
+    <script>
+      (function() {
+        if (localStorage.getItem('color-theme') === 'dark' || 
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-gray-50 dark:bg-gray-900">
+    <!-- Admin Navbar -->
+    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center justify-start rtl:justify-end">
+            <!-- Sidebar toggle button -->
+            <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                <span class="sr-only">Open sidebar</span>
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                   <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                </svg>
+            </button>
+            
+            <!-- Logo -->
+            <%= link_to admin_root_path, class: "flex ms-2 md:me-24" do %>
+              <svg class="w-8 h-8 me-3 text-purple-600 dark:text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"/>
+              </svg>
+              <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Teddy Admin</span>
+            <% end %>
+          </div>
+          
+          <!-- Right side buttons -->
+          <div class="flex items-center">
+            <div class="flex items-center ms-3 space-x-3">
+              <!-- Back to site -->
+              <%= link_to root_path, 
+                  class: "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700",
+                  title: "Back to main site" do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+              <% end %>
+              
+              <!-- Theme toggle -->
+              <button id="theme-toggle" type="button" 
+                      class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                </svg>
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+              </button>
+              
+              <!-- User menu -->
+              <button type="button" 
+                      class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" 
+                      aria-expanded="false" 
+                      data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
+                  <%= current_user.full_name[0].upcase %>
+                </div>
+              </button>
+              
+              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+                <div class="px-4 py-3" role="none">
+                  <p class="text-sm text-gray-900 dark:text-white" role="none">
+                    <%= current_user.full_name %>
+                  </p>
+                  <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                    <%= current_user.email_address %>
+                  </p>
+                </div>
+                <ul class="py-1" role="none">
+                  <li>
+                    <%= link_to session_path, 
+                        data: { turbo_method: :delete },
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white",
+                        role: "menuitem" do %>
+                      Sign out
+                    <% end %>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+      <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <ul class="space-y-2 font-medium">
+          <!-- Dashboard -->
+          <li>
+            <%= link_to admin_root_path, 
+                class: "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group #{'bg-gray-100 dark:bg-gray-700' if controller_name == 'dashboard'}" do %>
+              <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 22 21">
+                <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+              </svg>
+              <span class="ms-3">Dashboard</span>
+            <% end %>
+          </li>
+          
+          <!-- Reports -->
+          <li>
+            <%= link_to admin_reports_path, 
+                class: "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group #{'bg-gray-100 dark:bg-gray-700' if controller_name == 'reports'}" do %>
+              <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap">Reports</span>
+              <% if @stats && @stats[:pending_reports] > 0 %>
+                <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  <%= @stats[:pending_reports] %>
+                </span>
+              <% end %>
+            <% end %>
+          </li>
+          
+          <!-- Users -->
+          <li>
+            <%= link_to admin_users_path, 
+                class: "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group #{'bg-gray-100 dark:bg-gray-700' if controller_name == 'users'}" do %>
+              <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 18">
+                <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
+            <% end %>
+          </li>
+          
+          <!-- Activity Log -->
+          <li>
+            <%= link_to admin_activity_log_path, 
+                class: "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group #{'bg-gray-100 dark:bg-gray-700' if controller_name == 'activity_log'}" do %>
+              <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z"/>
+                <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"/>
+                <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"/>
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap">Activity Log</span>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="p-4 sm:ml-64 mt-14">
+      <!-- Flash messages -->
+      <% if flash.any? %>
+        <div class="mb-4">
+          <% flash.each do |type, message| %>
+            <div class="p-4 mb-4 text-sm rounded-lg <%= type == 'notice' ? 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400' : 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400' %>" role="alert">
+              <%= message %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      
+      <%= yield %>
+    </div>
+
+    <!-- Theme toggle script -->
+    <script>
+      (function() {
+        const ThemeManager = {
+          clickHandler: null,
+          
+          init: function() {
+            this.updateIcon();
+            this.attachEventListener();
+          },
+          
+          updateIcon: function() {
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            
+            if (!lightIcon || !darkIcon) return;
+            
+            const isDark = localStorage.getItem('color-theme') === 'dark' || 
+                          (!localStorage.getItem('color-theme') && 
+                           window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (isDark) {
+              lightIcon.classList.remove('hidden');
+              darkIcon.classList.add('hidden');
+            } else {
+              darkIcon.classList.remove('hidden');
+              lightIcon.classList.add('hidden');
+            }
+          },
+          
+          toggleTheme: function() {
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            
+            lightIcon.classList.toggle('hidden');
+            darkIcon.classList.toggle('hidden');
+            
+            if (document.documentElement.classList.contains('dark')) {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('color-theme', 'light');
+            } else {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('color-theme', 'dark');
+            }
+          },
+          
+          attachEventListener: function() {
+            const button = document.getElementById('theme-toggle');
+            if (!button) return;
+            
+            if (this.clickHandler) {
+              button.removeEventListener('click', this.clickHandler);
+            }
+            
+            this.clickHandler = this.toggleTheme.bind(this);
+            button.addEventListener('click', this.clickHandler);
+          }
+        };
+        
+        document.addEventListener('turbo:load', function() {
+          ThemeManager.init();
+        });
+      })();
+    </script>
+  </body>
+</html>
+

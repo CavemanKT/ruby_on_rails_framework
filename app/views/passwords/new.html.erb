@@ -1,8 +1,67 @@
-<h1>Forgot your password?</h1>
+<div class="max-w-md mx-auto">
+  <!-- Flash 消息 -->
+  <% if flash[:alert] %>
+    <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+      </svg>
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  
+  <% if flash[:notice] %>
+    <div class="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+      <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+      </svg>
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
 
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+  <!-- 重置密码表单 -->
+  <div class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 dark:bg-gray-800 dark:border dark:border-gray-700">
+    <!-- 标题和说明 -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Forgot your password?</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Enter your email address and we'll send you instructions to reset your password.
+      </p>
+    </div>
+    
+    <%= form_with url: passwords_path, class: "space-y-4" do |form| %>
+      <!-- Email 输入框 -->
+      <div>
+        <%= form.label :email_address, "Email Address", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= form.email_field :email_address, 
+            required: true, 
+            autofocus: true, 
+            autocomplete: "username", 
+            placeholder: "name@company.com", 
+            value: params[:email_address],
+            class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+      </div>
+      
+      <!-- 提交按钮 -->
+      <%= form.submit "Send Reset Instructions", 
+          class: "w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+    <% end %>
+    
+    <!-- 返回登录链接 -->
+    <div class="mt-4 text-center">
+      <%= link_to "← Back to Sign In", new_session_path, 
+          class: "text-sm font-medium text-blue-600 hover:underline dark:text-blue-500" %>
+    </div>
+  </div>
 
-<%= form_with url: passwords_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.submit "Email reset instructions" %>
-<% end %>
+  <!-- 帮助信息 -->
+  <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+    <div class="flex items-start">
+      <svg class="flex-shrink-0 inline w-4 h-4 me-3 mt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+      </svg>
+      <div>
+        <span class="font-medium">Need help?</span> If you don't receive an email within a few minutes, please check your spam folder.
+      </div>
+    </div>
+  </div>
+</div>

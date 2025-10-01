@@ -1,0 +1,229 @@
+<% content_for :title, "Dashboard" %>
+
+<div class="mb-4">
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+  <p class="text-gray-600 dark:text-gray-400">Welcome back, <%= current_user.full_name %>!</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3">
+  <!-- Total Users -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Total Users</h5>
+      <svg class="w-8 h-8 text-blue-600 dark:text-blue-500" fill="currentColor" viewBox="0 0 20 18">
+        <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @stats[:total_users] %></p>
+    <p class="text-sm text-green-600 dark:text-green-500">
+      +<%= @stats[:new_users_today] %> today
+    </p>
+  </div>
+
+  <!-- Pending Reports -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Pending Reports</h5>
+      <svg class="w-8 h-8 text-red-600 dark:text-red-500" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @stats[:pending_reports] %></p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      <%= @stats[:total_reports] %> total
+    </p>
+  </div>
+
+  <!-- Active Bans -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Active Bans</h5>
+      <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @stats[:active_bans] %></p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Currently banned
+    </p>
+  </div>
+
+  <!-- Admin Actions Today -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Actions Today</h5>
+      <svg class="w-8 h-8 text-purple-600 dark:text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z"/>
+        <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @stats[:admin_actions_today] %></p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Admin operations
+    </p>
+  </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+  <!-- Recent Reports -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Recent Reports</h5>
+      <%= link_to "View all", admin_reports_path, class: "text-sm font-medium text-blue-600 hover:underline dark:text-blue-500" %>
+    </div>
+    <div class="flow-root">
+      <% if @recent_reports.any? %>
+        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @recent_reports.each do |report| %>
+            <li class="py-3 sm:py-4">
+              <div class="flex items-center">
+                <div class="flex-1 min-w-0 ms-4">
+                  <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <%= report.reportable_type %> reported by <%= report.reporter.full_name %>
+                  </p>
+                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                    <%= report.reason.humanize %> • <%= time_ago_in_words(report.created_at) %> ago
+                  </p>
+                </div>
+                <div class="inline-flex items-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case report.status
+                        when 'pending' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                        when 'reviewing' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                        when 'resolved' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        else 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                        end %>">
+                    <%= report.status.humanize %>
+                  </span>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-sm text-gray-500 dark:text-gray-400">No recent reports</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Recent Users -->
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Recent Users</h5>
+      <%= link_to "View all", admin_users_path, class: "text-sm font-medium text-blue-600 hover:underline dark:text-blue-500" %>
+    </div>
+    <div class="flow-root">
+      <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @recent_users.each do |user| %>
+          <li class="py-3 sm:py-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+                  <%= user.full_name[0].upcase %>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0 ms-4">
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <%= user.full_name %>
+                </p>
+                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                  <%= user.email_address %>
+                </p>
+              </div>
+              <div class="inline-flex items-center text-sm text-gray-900 dark:text-white">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= user.admin? ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300' %>">
+                  <%= user.role.humanize %>
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Active Bans Section -->
+<% if @active_bans.any? %>
+  <div class="mt-4 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <h5 class="mb-4 text-xl font-bold leading-none text-gray-900 dark:text-white">Active Bans</h5>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">User</th>
+            <th scope="col" class="px-6 py-3">Reason</th>
+            <th scope="col" class="px-6 py-3">Banned by</th>
+            <th scope="col" class="px-6 py-3">Expires</th>
+            <th scope="col" class="px-6 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @active_bans.each do |ban| %>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <%= ban.user.full_name %>
+              </td>
+              <td class="px-6 py-4">
+                <%= truncate(ban.reason, length: 50) %>
+              </td>
+              <td class="px-6 py-4">
+                <%= ban.admin.full_name %>
+              </td>
+              <td class="px-6 py-4">
+                <%= ban.permanent? ? "Permanent" : time_ago_in_words(ban.expires_at) %>
+              </td>
+              <td class="px-6 py-4">
+                <%= link_to "Unban", "#", class: "font-medium text-blue-600 dark:text-blue-500 hover:underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<!-- Recent Admin Actions -->
+<div class="mt-4 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+  <div class="flex items-center justify-between mb-4">
+    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Recent Admin Actions</h5>
+    <%= link_to "View all", admin_activity_log_path, class: "text-sm font-medium text-blue-600 hover:underline dark:text-blue-500" %>
+  </div>
+  <div class="flow-root">
+    <% if @recent_actions.any? %>
+      <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @recent_actions.each do |action| %>
+          <li class="py-3">
+            <div class="flex items-start space-x-3">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold text-xs">
+                  <%= action.admin.full_name[0].upcase %>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                  <%= action.admin.full_name %>
+                  <span class="text-gray-500 dark:text-gray-400">performed</span>
+                  <%= action.action_type %>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <%= time_ago_in_words(action.created_at) %> ago
+                  <% if action.ip_address.present? %>
+                    • from <%= action.ip_address %>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-gray-500 dark:text-gray-400">No recent admin actions</p>
+    <% end %>
+  </div>
+</div>
+

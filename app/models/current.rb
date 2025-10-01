@@ -1,4 +1,8 @@
 class Current < ActiveSupport::CurrentAttributes
   attribute :session
-  delegate :user, to: :session, allow_nil: true
+  
+  # 便捷方法访问当前用户
+  def user
+    session&.user
+  end
 end

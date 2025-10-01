@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reporter: one
+  reportable: one
+  reportable_type: Reportable
+  reason: 1
+  description: MyText
+  status: 1
+  admin: one
+  admin_note: MyText
+  resolved_at: 2025-10-01 18:31:11
+
+two:
+  reporter: two
+  reportable: two
+  reportable_type: Reportable
+  reason: 1
+  description: MyText
+  status: 1
+  admin: two
+  admin_note: MyText
+  resolved_at: 2025-10-01 18:31:11

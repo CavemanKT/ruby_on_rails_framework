@@ -228,13 +228,7 @@ protocol PostRepository {
 - **混合存储**: 本地缓存 + 云端同步
 
 ### **3. 服务层设计**
-```swift
-// 环境音服务
-AmbientSoundService.shared.playIfEnabled(enabled)
 
-// 文本转语音服务  
-TextToSpeechService.shared.speak(text, rate: rate)
-```
 
 ## 🎨 设计心理学应用
 
@@ -345,11 +339,4 @@ protocol PostRepository {
 }
 ```
 
-```swift
-// 环境音服务
-AmbientSoundService.shared.playIfEnabled(enabled)
-
-// 文本转语音服务  
-TextToSpeechService.shared.speak(text, rate: rate)
-```
 

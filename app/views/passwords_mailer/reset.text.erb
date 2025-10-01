@@ -1,2 +1,19 @@
-You can reset your password within the next 15 minutes on this password reset page:
+Password Reset Request
+======================
+
+Hello!
+
+We received a request to reset your password for your Teddy account.
+
+You can reset your password by visiting this link:
 <%= edit_password_url(@user.password_reset_token) %>
+
+⏰ IMPORTANT: This link will expire in 15 minutes for security reasons.
+
+🛡️ Security tip: If you didn't request a password reset, please ignore this email or contact support if you have concerns about your account security.
+
+---
+Teddy
+This is an automated email. Please do not reply to this message.
+
+© <%= Time.current.year %> Teddy. All rights reserved.

@@ -1,0 +1,47 @@
+<% content_for :title, "Activity Log" %>
+
+<div class="mb-4">
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Activity Log</h1>
+  <p class="text-gray-600 dark:text-gray-400">View all administrative actions</p>
+</div>
+
+<!-- Activity log -->
+<div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+  <h5 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Recent Actions</h5>
+  
+  <% if @actions.any? %>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Admin</th>
+            <th scope="col" class="px-6 py-3">Action</th>
+            <th scope="col" class="px-6 py-3">IP Address</th>
+            <th scope="col" class="px-6 py-3">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @actions.each do |action| %>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                <%= action.admin.full_name %>
+              </td>
+              <td class="px-6 py-4">
+                <%= action.action_type %>
+              </td>
+              <td class="px-6 py-4">
+                <%= action.ip_address || "N/A" %>
+              </td>
+              <td class="px-6 py-4">
+                <%= time_ago_in_words(action.created_at) %> ago
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-gray-700 dark:text-gray-400">No activity logs yet.</p>
+  <% end %>
+</div>
+
