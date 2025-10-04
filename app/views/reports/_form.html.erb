@@ -1,11 +1,15 @@
-<div id="report_modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div id="report_modal" 
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+     data-controller="modal"
+     data-modal-target="modal"
+     data-action="click->modal#backdropClick keydown@window->modal#keydown">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
     <div class="px-6 py-4 border-b border-gray-200">
       <h3 class="text-lg font-semibold text-gray-900">Report Content</h3>
       <p class="text-sm text-gray-600 mt-1">Help us keep the community safe</p>
     </div>
     
-    <%= form_with model: [:report, @report], local: true, class: "px-6 py-4 space-y-4" do |form| %>
+    <%= form_with model: [:report, @report], local: false, class: "px-6 py-4 space-y-4" do |form| %>
       <!-- 举报原因 -->
       <div>
         <%= form.label :reason, "What's the issue?", class: "block text-sm font-medium text-gray-700 mb-2" %>

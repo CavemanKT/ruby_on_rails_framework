@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     member do
       get :completed
       post :finish
+      get :debug # 添加调试路由
     end
     collection do
       get :history
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
   
   # Reports
   resources :reports, only: [:new, :create]
+  get 'reports/new', to: 'reports#new'
   
   # Admin namespace
   namespace :admin do
@@ -60,5 +62,8 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
+
+
+
   root "home#index"
 end

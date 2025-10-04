@@ -1,6 +1,6 @@
 # 帖子管理控制器
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :like]
   
   # 显示帖子列表（首页时间线）
   def index
@@ -81,9 +81,18 @@ class PostsController < ApplicationController
   
   # 点赞/取消点赞帖子
   def like
-    # 这里暂时只是返回成功响应，稍后实现 Like 模型时会完善
-    respond_to do |format|
-      format.json { render json: { liked: true, likes_count: @post.likes_count + 1 } }
+    if @post.can_be_liked_by?(current_user)
+      result = @post.toggle_like(current_user)
+      
+      respond_to do |format|
+        format.json { render json: result }
+        format.html { redirect_back(fallback_location: root_path) }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { error: "Cannot like this post" }, status: :forbidden }
+        format.html { redirect_back(fallback_location: root_path, alert: "Cannot like this post") }
+      end
     end
   end
   

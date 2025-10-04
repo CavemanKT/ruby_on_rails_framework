@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :breathing_sessions, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   # 管理员相关关联
   has_many :reports_submitted, class_name: "Report", foreign_key: "reporter_id", dependent: :destroy

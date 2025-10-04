@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   
   # 显示评论列表
   def index
-    @comments = @post.comments.includes(:user).recent.page(params[:page]).per(10)
+    @comments = @post.comments.includes(:user).recent.limit(10)
     
     respond_to do |format|
       format.html

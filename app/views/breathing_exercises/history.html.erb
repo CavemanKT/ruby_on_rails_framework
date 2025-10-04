@@ -2,12 +2,12 @@
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- 页面标题 -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Breathing Exercise History</h1>
-      <p class="mt-2 text-gray-600">Track your mindfulness journey</p>
+      <h1 class="text-3xl font-bold text-gray-900">Your Breathing Exercise History</h1>
+      <p class="mt-2 text-gray-600">Track your personal mindfulness journey</p>
     </div>
     
     <!-- 统计卡片 -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex items-center">
           <div class="p-2 bg-blue-100 rounded-lg">
@@ -26,13 +26,31 @@
         <div class="flex items-center">
           <div class="p-2 bg-green-100 rounded-lg">
             <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Completed</p>
+            <p class="text-2xl font-semibold text-gray-900"><%= @completed_sessions %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center">
+          <div class="p-2 bg-green-100 rounded-lg">
+            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div class="ml-4">
             <p class="text-sm font-medium text-gray-500">Total Time</p>
             <p class="text-2xl font-semibold text-gray-900">
-              <%= @total_duration / 60 %>m
+              <% if @total_duration >= 60 %>
+                <%= (@total_duration / 60.0).round(1) %>m
+              <% else %>
+                <%= @total_duration %>s
+              <% end %>
             </p>
           </div>
         </div>
@@ -56,37 +74,70 @@
     <!-- 练习历史列表 -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Recent Sessions</h2>
+        <h2 class="text-lg font-semibold text-gray-900">Your Recent Sessions</h2>
       </div>
       
-      <% if @sessions.any? %>
+      <% if @sessions.present? %>
         <div class="divide-y divide-gray-200">
           <% @sessions.each do |session| %>
             <div class="px-6 py-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <div class="flex-shrink-0">
-                    <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                      </svg>
+                    <div class="h-10 w-10 <%= session.completed? ? 'bg-green-100' : 'bg-gray-100' %> rounded-full flex items-center justify-center">
+                      <% if session.completed? %>
+                        <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      <% else %>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      <% end %>
                     </div>
                   </div>
                   
                   <div>
-                    <p class="text-sm font-medium text-gray-900">
-                      <%= session.cycles_completed %> cycles completed
-                    </p>
+                    <div class="flex items-center space-x-2">
+                      <p class="text-sm font-medium text-gray-900">
+                        <%= session.cycles_completed %> cycles
+                      </p>
+                      <% if session.completed? %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                          Completed
+                        </span>
+                      <% else %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                          Incomplete
+                        </span>
+                      <% end %>
+                    </div>
                     <p class="text-sm text-gray-500">
-                      <%= session.formatted_duration %> • <%= time_ago_in_words(session.created_at) %> ago
+                      Duration: <%= session.formatted_duration %> • 
+                      Created: <%= time_ago_in_words(session.created_at) %> ago
+                      <% if session.updated_at != session.created_at %>
+                        • Updated: <%= time_ago_in_words(session.updated_at) %> ago
+                      <% end %>
                     </p>
                   </div>
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    +<%= session.calm_points_earned %> points
-                  </span>
+                  <% if session.completed? %>
+                    <% if session.can_earn_points? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        +<%= session.actual_points_earned %> points
+                      </span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                        Need 5+ cycles
+                      </span>
+                    <% end %>
+                  <% else %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                      No points
+                    </span>
+                  <% end %>
                 </div>
               </div>
             </div>

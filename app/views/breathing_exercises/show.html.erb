@@ -74,7 +74,7 @@
                 data-action="click->breathing-exercise#stop"
                 data-breathing-exercise-target="stopButton"
                 class="bg-red-500 bg-opacity-80 hover:bg-opacity-100 text-white py-2 px-4 rounded-full text-sm transition-all duration-200">
-          Stop
+          Stop & View History
         </button>
       </div>
     </div>
@@ -82,12 +82,12 @@
     <!-- 完成提示 -->
     <div class="hidden" data-breathing-exercise-target="completionMessage">
       <div class="bg-white bg-opacity-20 rounded-lg p-6 text-white">
-        <div class="text-2xl font-bold mb-2">🎉 Great Job!</div>
+        <div class="text-2xl text-black font-bold mb-2">🎉 Great Job!</div>
         <div class="text-sm">You've completed the breathing exercise</div>
         <button type="button" 
                 data-action="click->breathing-exercise#finish"
                 class="mt-4 bg-white text-blue-600 font-semibold py-2 px-6 rounded-full hover:bg-gray-100 transition-colors duration-200">
-          Finish & Earn Points
+          Finish & View History
         </button>
       </div>
     </div>

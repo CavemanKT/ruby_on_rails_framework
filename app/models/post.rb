@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
+  has_many :likes, as: :likeable, dependent: :destroy
   
   # 可见性枚举
   enum :visibility, { public_post: 0, circle: 1, private_post: 2 }, default: :public_post
@@ -48,6 +49,26 @@ class Post < ApplicationRecord
   # 获取帖子中的标签（从内容中提取 #标签）
   def extract_tags
     content.scan(/#(\w+)/).flatten.uniq
+  end
+  
+  # 检查用户是否已点赞此帖子
+  def liked_by?(user)
+    return false unless user
+    likes.exists?(user: user)
+  end
+  
+  # 切换点赞状态
+  def toggle_like(user)
+    return false unless user && can_be_liked_by?(user)
+    
+    like = likes.find_by(user: user)
+    if like
+      like.destroy
+      { liked: false, likes_count: likes.count }
+    else
+      likes.create(user: user)
+      { liked: true, likes_count: likes.count }
+    end
   end
   
   private

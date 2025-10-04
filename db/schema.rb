@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_04_151334) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_04_194338) do
   create_table "admin_actions", force: :cascade do |t|
     t.integer "admin_id", null: false
     t.string "action_type", null: false
@@ -49,6 +49,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_04_151334) do
     t.integer "calm_points_earned"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "cycles_completed"
+    t.integer "total_phases_completed"
+    t.text "phases_breakdown"
+    t.datetime "started_at"
+    t.datetime "finished_at"
     t.index ["user_id"], name: "index_breathing_sessions_on_user_id"
   end
 
@@ -60,6 +65,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_04_151334) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "likeable_type", null: false
+    t.integer "likeable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
+    t.index ["user_id", "likeable_type", "likeable_id"], name: "index_likes_on_user_and_likeable", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -130,6 +146,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_04_151334) do
   add_foreign_key "breathing_sessions", "users"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "reports", "users", column: "admin_id"
   add_foreign_key "reports", "users", column: "reporter_id"

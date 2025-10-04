@@ -1,5 +1,5 @@
 <div id="new_comment_form" class="border-t border-gray-200 pt-4">
-  <%= form_with model: [post, comment], local: true, class: "flex space-x-3" do |form| %>
+  <%= form_with model: [post, comment], local: false, class: "flex space-x-3" do |form| %>
     <img class="h-8 w-8 rounded-full flex-shrink-0" 
          src="<%= current_user.avatar %>" 
          alt="<%= current_user.display_nickname %> avatar">

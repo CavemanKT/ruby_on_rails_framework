@@ -71,12 +71,12 @@
     <!-- 统计信息 -->
     <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
       <div class="flex items-center space-x-4">
-        <% if post.likes_count > 0 %>
-          <span class="flex items-center">
+        <% if post.likes.count > 0 %>
+          <span class="flex items-center likes-count" data-post-id="<%= post.id %>">
             <svg class="h-4 w-4 mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
             </svg>
-            <%= pluralize(post.likes_count, 'like') %>
+            <%= pluralize(post.likes.count, 'like') %>
           </span>
         <% end %>
         
@@ -93,11 +93,15 @@
               class="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
               data-controller="like-button"
               data-like-button-target="button"
+              data-like-button-post-id-value="<%= post.id %>"
+              data-action="click->like-button#like"
               data-post-id="<%= post.id %>">
-        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-5 w-5 <%= post.liked_by?(current_user) ? 'text-red-500' : 'text-gray-400' %>" 
+             fill="<%= post.liked_by?(current_user) ? 'currentColor' : 'none' %>" 
+             stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
         </svg>
-        <span class="text-sm font-medium text-gray-700">Like</span>
+        <span class="text-sm font-medium text-gray-700"><%= post.liked_by?(current_user) ? 'Liked' : 'Like' %></span>
       </button>
       
       <!-- 评论按钮 -->
@@ -113,7 +117,7 @@
       <% unless post.user == current_user %>
         <%= link_to new_report_path(post_id: post.id), 
             class: "flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200",
-            data: { turbo_frame: "report_modal" } do %>
+            data: { turbo_frame: "_top" } do %>
           <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
           </svg>
