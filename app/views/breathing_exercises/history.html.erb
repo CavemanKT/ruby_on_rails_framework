@@ -102,7 +102,7 @@
                       <p class="text-sm font-medium text-gray-900">
                         <%= session.cycles_completed %> cycles
                       </p>
-                      <% if session.completed? %>
+                      <% if session.cycles_completed >= 5 %>
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                           Completed
                         </span>
@@ -123,10 +123,10 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                  <% if session.completed? %>
-                    <% if session.can_earn_points? %>
+                  <% if session.cycles_completed >= 5 %>
+                    <% if session.calm_points_earned > 0 %>
                       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        +<%= session.actual_points_earned %> points
+                        +<%= session.calm_points_earned %> points
                       </span>
                     <% else %>
                       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
