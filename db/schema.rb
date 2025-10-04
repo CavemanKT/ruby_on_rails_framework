@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_115145) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_04_151334) do
   create_table "admin_actions", force: :cascade do |t|
     t.integer "admin_id", null: false
     t.string "action_type", null: false
@@ -40,6 +40,37 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_115145) do
     t.index ["expires_at"], name: "index_bans_on_expires_at"
     t.index ["user_id", "is_active"], name: "index_bans_on_user_id_and_is_active"
     t.index ["user_id"], name: "index_bans_on_user_id"
+  end
+
+  create_table "breathing_sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "duration"
+    t.boolean "completed"
+    t.integer "calm_points_earned"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_breathing_sessions_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.integer "user_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.text "content"
+    t.integer "visibility"
+    t.integer "likes_count"
+    t.integer "comments_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "reports", force: :cascade do |t|
@@ -83,6 +114,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_115145) do
     t.string "tel"
     t.boolean "allow_sms_messages", default: true, null: false
     t.boolean "allow_email_messages", default: true, null: false
+    t.string "nickname"
+    t.string "avatar_url"
+    t.text "bio"
+    t.integer "calm_points"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name"
     t.index ["role"], name: "index_users_on_role"
@@ -92,6 +127,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_115145) do
   add_foreign_key "admin_actions", "users", column: "admin_id"
   add_foreign_key "bans", "users"
   add_foreign_key "bans", "users", column: "admin_id"
+  add_foreign_key "breathing_sessions", "users"
+  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "users"
+  add_foreign_key "posts", "users"
   add_foreign_key "reports", "users", column: "admin_id"
   add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "sessions", "users"

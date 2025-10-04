@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  duration: 1
+  completed: false
+  calm_points_earned: 1
+
+two:
+  user: two
+  duration: 1
+  completed: false
+  calm_points_earned: 1

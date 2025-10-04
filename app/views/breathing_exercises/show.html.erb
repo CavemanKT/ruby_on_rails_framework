@@ -1,0 +1,104 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center"
+     data-controller="breathing-exercise"
+     data-breathing-exercise-session-id-value="<%= @session.id %>"
+     data-breathing-exercise-phases-value='<%= BreathingSession::PHASES.to_json %>'>
+  
+  <div class="max-w-md w-full text-center space-y-8">
+    <!-- 返回按钮 -->
+    <div class="flex justify-start mb-4">
+      <%= link_to new_breathing_exercise_path, 
+          class: "inline-flex items-center text-black hover:text-gray-400 transition-colors duration-200" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Exercise Setup
+      <% end %>
+    </div>
+
+    <!-- 练习信息 -->
+    <div class="text-black">
+      <h2 class="text-2xl font-bold mb-2">Breathing Exercise</h2>
+      <div class="flex justify-center space-x-6 text-sm">
+        <div class="bg-white bg-opacity-20 rounded-full px-3 py-1">
+          Cycle: <span data-breathing-exercise-target="cycle">1</span>/5
+        </div>
+        <div class="bg-white bg-opacity-20 rounded-full px-3 py-1">
+          Time: <span data-breathing-exercise-target="timer">0:00</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 呼吸动画圆圈 -->
+    <div class="flex justify-center">
+      <div class="relative">
+        <div class="w-64 h-64 rounded-full border-4 border-white border-opacity-30 flex items-center justify-center"
+             data-breathing-exercise-target="circle">
+          <div class="text-center text-black">
+            <div class="text-3xl font-bold mb-2" data-breathing-exercise-target="phaseLabel">
+              Breathe In
+            </div>
+            <div class="text-6xl font-bold" data-breathing-exercise-target="countdown">
+              4
+            </div>
+          </div>
+        </div>
+        
+        <!-- 进度环 -->
+        <svg class="absolute inset-0 w-64 h-64 transform -rotate-90" data-breathing-exercise-target="progressRing">
+          <circle cx="128" cy="128" r="120" stroke="rgba(255,255,255,0.3)" stroke-width="8" fill="none"/>
+          <circle cx="128" cy="128" r="120" stroke="black" stroke-width="8" fill="none" 
+                  stroke-dasharray="754" stroke-dashoffset="754" 
+                  data-breathing-exercise-target="progress"/>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- 控制按钮 -->
+    <div class="space-y-4">
+      <button type="button" 
+              data-action="click->breathing-exercise#toggle"
+              data-breathing-exercise-target="playButton"
+              class="bg-white bg-opacity-20 hover:bg-opacity-30 text-black font-semibold py-3 px-8 rounded-full transition-all duration-200">
+        Start Exercise
+      </button>
+      
+      <div class="flex justify-center space-x-4">
+        <button type="button" 
+                data-action="click->breathing-exercise#pause"
+                data-breathing-exercise-target="pauseButton"
+                class="bg-white bg-opacity-10 hover:bg-opacity-20 text-black py-2 px-4 rounded-full text-sm transition-all duration-200 hidden">
+          Pause
+        </button>
+        
+        <button type="button" 
+                data-action="click->breathing-exercise#stop"
+                data-breathing-exercise-target="stopButton"
+                class="bg-red-500 bg-opacity-80 hover:bg-opacity-100 text-white py-2 px-4 rounded-full text-sm transition-all duration-200">
+          Stop
+        </button>
+      </div>
+    </div>
+    
+    <!-- 完成提示 -->
+    <div class="hidden" data-breathing-exercise-target="completionMessage">
+      <div class="bg-white bg-opacity-20 rounded-lg p-6 text-white">
+        <div class="text-2xl font-bold mb-2">🎉 Great Job!</div>
+        <div class="text-sm">You've completed the breathing exercise</div>
+        <button type="button" 
+                data-action="click->breathing-exercise#finish"
+                class="mt-4 bg-white text-blue-600 font-semibold py-2 px-6 rounded-full hover:bg-gray-100 transition-colors duration-200">
+          Finish & Earn Points
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 加载状态 -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+     data-breathing-exercise-target="loadingOverlay">
+  <div class="bg-white rounded-lg p-6 text-center">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+    <div class="text-gray-600">Saving your progress...</div>
+  </div>
+</div>

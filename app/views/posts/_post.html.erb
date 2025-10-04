@@ -1,0 +1,125 @@
+<div class="bg-white rounded-lg shadow-md p-6 mb-6 hover:shadow-lg transition-shadow duration-200">
+  <!-- 帖子头部 -->
+  <div class="flex items-start justify-between mb-4">
+    <div class="flex items-center space-x-3">
+      <!-- 作者头像 -->
+      <img class="h-10 w-10 rounded-full" 
+           src="<%= post.user.avatar %>" 
+           alt="<%= post.user.display_nickname %> avatar">
+      
+      <!-- 作者信息 -->
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900">
+          <%= link_to post.user.display_nickname, profile_path, class: "hover:text-blue-600" %>
+        </h3>
+        <p class="text-xs text-gray-500">
+          <%= time_ago_in_words(post.created_at) %> ago
+          <% if post.visibility != 'public_post' %>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium 
+                        <%= post.visibility == 'private_post' ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800' %>">
+              <%= post.visibility == 'private_post' ? '🔒 Private' : '👥 Support Circle' %>
+            </span>
+          <% end %>
+        </p>
+      </div>
+    </div>
+    
+    <!-- 操作菜单 -->
+    <div class="flex items-center space-x-2">
+      <% if post.user == current_user %>
+        <div class="relative" data-controller="dropdown">
+          <button type="button" 
+                  data-action="click->dropdown#toggle"
+                  class="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+            </svg>
+          </button>
+          
+          <div data-dropdown-target="menu" 
+               class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+            <%= link_to "Edit", edit_post_path(post), 
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            <%= link_to "Delete", post_path(post), 
+                method: :delete,
+                data: { confirm: "Are you sure you want to delete this post?" },
+                class: "block px-4 py-2 text-sm text-red-700 hover:bg-red-50" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- 帖子内容 -->
+  <div class="mb-4">
+    <p class="text-gray-900 leading-relaxed whitespace-pre-wrap"><%= post.content %></p>
+    
+    <!-- 标签显示 -->
+    <% if post.extract_tags.any? %>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <% post.extract_tags.each do |tag| %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            #<%= tag %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- 帖子统计和操作 -->
+  <div class="border-t border-gray-200 pt-4">
+    <!-- 统计信息 -->
+    <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+      <div class="flex items-center space-x-4">
+        <% if post.likes_count > 0 %>
+          <span class="flex items-center">
+            <svg class="h-4 w-4 mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+            </svg>
+            <%= pluralize(post.likes_count, 'like') %>
+          </span>
+        <% end %>
+        
+        <% if post.comments_count > 0 %>
+          <%= render 'comments/count', post: post %>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- 操作按钮 -->
+    <div class="flex items-center space-x-4">
+      <!-- 点赞按钮 -->
+      <button type="button" 
+              class="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+              data-controller="like-button"
+              data-like-button-target="button"
+              data-post-id="<%= post.id %>">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+        <span class="text-sm font-medium text-gray-700">Like</span>
+      </button>
+      
+      <!-- 评论按钮 -->
+      <%= link_to post_path(post), 
+          class: "flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" do %>
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <span class="text-sm font-medium text-gray-700">Comment</span>
+      <% end %>
+      
+      <!-- 举报按钮 -->
+      <% unless post.user == current_user %>
+        <%= link_to new_report_path(post_id: post.id), 
+            class: "flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200",
+            data: { turbo_frame: "report_modal" } do %>
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <span class="text-sm font-medium text-gray-700">Report</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

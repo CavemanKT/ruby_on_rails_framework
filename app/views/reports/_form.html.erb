@@ -1,0 +1,53 @@
+<div id="report_modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900">Report Content</h3>
+      <p class="text-sm text-gray-600 mt-1">Help us keep the community safe</p>
+    </div>
+    
+    <%= form_with model: [:report, @report], local: true, class: "px-6 py-4 space-y-4" do |form| %>
+      <!-- 举报原因 -->
+      <div>
+        <%= form.label :reason, "What's the issue?", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.select :reason, 
+            options_for_select([
+              ['Spam or misleading content', 'spam'],
+              ['Harassment or bullying', 'harassment'],
+              ['Self-harm or suicide content', 'self_harm'],
+              ['Hate speech or discrimination', 'hate_speech'],
+              ['Inappropriate content', 'inappropriate'],
+              ['Other', 'other']
+            ], @report.reason),
+            { prompt: 'Select a reason...' },
+            { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm" } %>
+        <% if @report.errors[:reason].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= @report.errors[:reason].first %></p>
+        <% end %>
+      </div>
+      
+      <!-- 详细描述 -->
+      <div>
+        <%= form.label :description, "Additional details (optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :description, 
+            rows: 3,
+            placeholder: "Please provide any additional context that might help us understand the issue...",
+            class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm" %>
+        <% if @report.errors[:description].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= @report.errors[:description].first %></p>
+        <% end %>
+        <p class="mt-1 text-xs text-gray-500">Maximum 1000 characters</p>
+      </div>
+      
+      <!-- 按钮 -->
+      <div class="flex justify-end space-x-3 pt-4">
+        <button type="button" 
+                data-action="click->modal#close"
+                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Cancel
+        </button>
+        <%= form.submit "Submit Report", 
+            class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+      </div>
+    <% end %>
+  </div>
+</div>

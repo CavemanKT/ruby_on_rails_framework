@@ -1,0 +1,83 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <!-- 成功图标 -->
+      <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+        <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      
+      <h2 class="text-3xl font-extrabold text-gray-900">
+        🎉 Great Job!
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        You've successfully completed your breathing exercise
+      </p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-xl p-8">
+      <div class="space-y-6">
+        <!-- 练习统计 -->
+        <div class="grid grid-cols-2 gap-4 text-center">
+          <div class="bg-blue-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-blue-600"><%= @session.cycles_completed %></div>
+            <div class="text-xs text-blue-800">Cycles Completed</div>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-green-600"><%= @session.formatted_duration %></div>
+            <div class="text-xs text-green-800">Total Duration</div>
+          </div>
+        </div>
+        
+        <!-- 积分奖励 -->
+        <div class="bg-yellow-50 rounded-lg p-4">
+          <div class="flex items-center justify-center space-x-2">
+            <svg class="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+            <span class="text-lg font-semibold text-yellow-800">
+              You earned <%= @session.calm_points_earned %> Calm Points!
+            </span>
+          </div>
+        </div>
+        
+        <!-- 情绪选择 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">How do you feel now?</h3>
+          <div class="grid grid-cols-3 gap-3">
+            <% [
+              { emoji: "😌", label: "Calm", value: "calm" },
+              { emoji: "😊", label: "Happy", value: "happy" },
+              { emoji: "😌", label: "Relaxed", value: "relaxed" },
+              { emoji: "😴", label: "Sleepy", value: "sleepy" },
+              { emoji: "😌", label: "Peaceful", value: "peaceful" },
+              { emoji: "😌", label: "Focused", value: "focused" }
+            ].each do |mood| %>
+              <button type="button" 
+                      class="p-3 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors duration-200"
+                      data-mood="<%= mood[:value] %>">
+                <div class="text-2xl mb-1"><%= mood[:emoji] %></div>
+                <div class="text-xs text-gray-600"><%= mood[:label] %></div>
+              </button>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="space-y-3">
+          <%= link_to "Practice Again", new_breathing_exercise_path, 
+              class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          
+          <div class="flex space-x-3">
+            <%= link_to "View History", history_breathing_exercises_path, 
+                class: "flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+            
+            <%= link_to "Back to Home", home_index_path, 
+                class: "flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

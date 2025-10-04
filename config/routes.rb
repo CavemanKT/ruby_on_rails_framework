@@ -2,8 +2,33 @@ Rails.application.routes.draw do
   # Public routes
   get "home/index"
   resource :session
-  resource :registration, only: [:new, :create]  # 添加这行
+  resource :registration, only: [:new, :create]
   resources :passwords, param: :token
+  
+  # Profile routes
+  resource :profile, only: [:show, :edit, :update]
+  
+  # Community routes
+  resources :posts do
+    member do
+      post :like
+    end
+    resources :comments, except: [:show, :index]
+  end
+  
+  # Breathing exercises
+  resources :breathing_exercises, path: 'breathing' do
+    member do
+      get :completed
+      post :finish
+    end
+    collection do
+      get :history
+    end
+  end
+  
+  # Reports
+  resources :reports, only: [:new, :create]
   
   # Admin namespace
   namespace :admin do
@@ -35,5 +60,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "sessions#new"
+  root "home#index"
 end

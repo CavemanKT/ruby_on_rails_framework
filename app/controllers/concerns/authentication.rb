@@ -52,7 +52,12 @@ module Authentication
 
     # 登录后跳转的 URL
     def after_authentication_url
-      session.delete(:return_to_after_authenticating) || root_url
+      # 如果用户还没有完成个人资料设置，引导他们完成
+      if current_user && !current_user.profile_completed?
+        return edit_profile_path(is_setup: true)
+      end
+      
+      session.delete(:return_to_after_authenticating) || home_index_path
     end
 
     # 为用户创建新 session

@@ -1,0 +1,79 @@
+<%# 帖子列表页面 - 首页时间线 %>
+<div class="container mx-auto px-4 py-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- 页面标题 -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Posts Timeline</h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Discover and share your thoughts with the community</p>
+    </div>
+
+    <!-- 创建新帖子按钮 -->
+    <div class="mb-6">
+      <%= link_to new_post_path, 
+          class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create New Post
+      <% end %>
+    </div>
+
+    <!-- 帖子列表容器 -->
+    <div id="posts-container">
+      <% if @posts.any? %>
+        <!-- 使用 partial 渲染帖子列表 -->
+        <%= render partial: 'post_list', locals: { posts: @posts } %>
+      <% else %>
+        <!-- 空状态 -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No posts yet</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first post.</p>
+          <div class="mt-6">
+            <%= link_to "Create Post", new_post_path, 
+                class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 分页导航 (如果需要的话) -->
+    <% if @posts.size == 20 %>
+      <div class="mt-8 text-center">
+        <button id="load-more-btn" 
+                class="px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors duration-200"
+                data-page="2">
+          Load More Posts
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- JavaScript for AJAX loading (如果需要的话) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', function() {
+        const page = this.dataset.page;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '<%= posts_path %>?page=' + page, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.insertAdjacentHTML('beforeend', xhr.responseText);
+            this.dataset.page = parseInt(page) + 1;
+            if (xhr.responseText.trim() === '') {
+              this.style.display = 'none';
+            }
+          }
+        };
+        xhr.send();
+      });
+    }
+  });
+</script>
